@@ -1,7 +1,8 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import React, { KeyboardEvent, useRef, useState } from "react";
+import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useFocusTrap, useTabModifier } from "@/hooks/focus-trap";
+import { useCachedResponse } from "@/hooks/cached-response";
 
 const WorldMap = dynamic(
   import("../components/world-map").then(i => ({ default: i.WorldMap })),
@@ -9,11 +10,20 @@ const WorldMap = dynamic(
 );
 
 export default function Home() {
-  const [currentSearch, setCurrentSearch] = useState("");
-  const [autocomplete] = useState(["1", "2", "3"]);
+  // Focus, etc...
   const inputWrapperRef = useRef<HTMLDivElement>(null);
   useFocusTrap(inputWrapperRef.current, () => false);
   const { focusPrevious, focusNext } = useTabModifier();
+
+  // Input and autocomplete
+  const [currentSearch, setCurrentSearch] = useState("");
+  const [autocomplete] = useState(["1", "2", "3"]);
+  const countries = useCachedResponse("countries.json");
+
+  useEffect(() => {
+    if (countries.loading) return;
+    console.log(countries.data);
+  }, [currentSearch, countries]);
 
   const modifyFocus = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowUp") {
