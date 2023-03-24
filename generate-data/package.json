@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json -w"
+  },
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "@types/node": "^18.15.7"
+  }
+}

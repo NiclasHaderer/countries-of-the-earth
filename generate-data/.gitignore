@@ -34,8 +34,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.idea
-*.iml
-.vscode
-public/*.json
+dist
