@@ -5,7 +5,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "typescript": "^5.0.2",
-    "@types/node": "^18.15.7"
+    "@types/node": "^18.15.7",
+    "typescript": "^5.0.2"
   }
 }

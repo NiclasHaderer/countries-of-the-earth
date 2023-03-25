@@ -6,6 +6,7 @@
     "moduleResolution": "Node",
     "strict": true,
     "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

@@ -15,3 +15,9 @@ body {
 #__next {
     display: contents;
 }
+
+.leaflet-div-icon{
+    background-color: transparent!important;
+    border: none!important;
+    box-shadow: none!important;
+}

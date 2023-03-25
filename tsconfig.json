@@ -37,7 +37,10 @@
     "pages/**/*.tsx",
     "hooks/**/*.tsx",
     "components/**/*.tsx",
-    ".next/types/**/*.ts"
+    "utils/**/*.ts",
+    "utils/**/*.tsx",
+    ".next/types/**/*.ts",
+    "types.d.ts"
   ],
   "exclude": [
     "node_modules"
