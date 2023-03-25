@@ -17,19 +17,8 @@
     "module": "esnext",
     "importHelpers": true,
     "target": "ES2022",
-    "lib": [
-      "ESNext",
-      "DOM"
-    ]
+    "lib": ["ESNext", "DOM"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "../node_modules",
-    "../pages",
-    "../hooks",
-    "../components",
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "../node_modules", "../pages", "../hooks", "../components"]
 }

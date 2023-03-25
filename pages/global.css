@@ -4,20 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body {
-    margin: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 #__next {
-    display: contents;
+  display: contents;
 }
 
-.leaflet-div-icon{
-    background-color: transparent!important;
-    border: none!important;
-    box-shadow: none!important;
+.leaflet-div-icon {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }

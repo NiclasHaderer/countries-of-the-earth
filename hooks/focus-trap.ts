@@ -1,12 +1,9 @@
 import { useGlobalEvent } from "./global-events";
 
-const TAB_SELECTORS =
-  'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])';
+const TAB_SELECTORS = 'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])';
 
-const getTabbableElements = (element: HTMLElement) =>
-  [...element.querySelectorAll(TAB_SELECTORS)] as HTMLElement[];
-const getFocusedIndexElement = (elements: HTMLElement[]) =>
-  elements.findIndex(e => e === document.activeElement);
+const getTabbableElements = (element: HTMLElement) => [...element.querySelectorAll(TAB_SELECTORS)] as HTMLElement[];
+const getFocusedIndexElement = (elements: HTMLElement[]) => elements.findIndex(e => e === document.activeElement);
 
 const toNextTab = (elements: HTMLElement[], currentIndex: number) => {
   let newIndex = currentIndex + 1;
@@ -34,8 +31,7 @@ export const useFocusTrap = (
       const currentTabIndex = getFocusedIndexElement(tabElements);
 
       // Invalid
-      if (currentTabIndex === -1 || currentTabIndex >= tabElements.length)
-        tabElements[0]?.focus();
+      if (currentTabIndex === -1 || currentTabIndex >= tabElements.length) tabElements[0]?.focus();
 
       const goBack = e.shiftKey;
       if (goBack) {
