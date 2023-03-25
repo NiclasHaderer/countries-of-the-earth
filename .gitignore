@@ -39,3 +39,4 @@ next-env.d.ts
 *.iml
 .vscode
 public/*.json
+dist

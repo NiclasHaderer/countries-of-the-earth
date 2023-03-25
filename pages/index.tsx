@@ -7,18 +7,34 @@ import { Search } from "@/components/search";
 import { Random } from "@/components/random";
 import { Button } from "@/components/button";
 import { Close } from "@/components/close";
+import { useLocalStorage } from "@/hooks/localstorage";
 
 const WorldMap = dynamic(
   import("../components/world-map").then(i => ({ default: i.WorldMap })),
   { ssr: false }
 );
 
+type Modes =
+  | {
+      mode: "random";
+      randomCountry: Country;
+      selectedCountry?: undefined;
+    }
+  | {
+      mode: "all";
+      selectedCountry?: Country;
+      randomCountry?: undefined;
+    }
+  | {
+      mode: "result";
+      selectedCountry: Country;
+      randomCountry: Country;
+    };
+
 export default function Home() {
   const countries = useCachedResponse<Countries>("countries.json");
-  const [mode, setMode] = useState<"random" | "all" | "result">("all");
-  const [showOutline, setShowOutline] = useState<boolean>(false);
-  const [randomCountry, setRandomCountry] = useState<Country>();
-  const [selectedCountry, setSelectedCountry] = useState<Country>();
+  const [showOutline, setShowOutline] = useLocalStorage("outline", false);
+  const [appState, setAppState] = useState<Modes>({ mode: "all" });
 
   return (
     <>
@@ -29,50 +45,49 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/*Indicator which country to pick*/}
-      {mode === "random" ? (
+      {appState.mode === "random" ? (
         <p className="absolute top-2 left-1/2 pt-5 -translate-x-1/2 z-1000 bg-surface p-4 rounded-2xl">
           <button
             className={`absolute top-1 right-1`}
             onClick={() => {
-              setMode("all");
-              setSelectedCountry(undefined);
-              setRandomCountry(undefined);
+              setAppState({ mode: "all" });
             }}
           >
             <Close />
           </button>
-          Select <b className="font-semibold">{randomCountry?.countryName}</b> on the map
+          Select <b className="font-semibold">{appState.randomCountry.countryName}</b> on the map
         </p>
       ) : null}
+
       {/*Result*/}
-      {mode === "result" && !!selectedCountry ? (
+      {appState.mode === "result" ? (
         <div className="absolute top-2 pt-5 left-1/2 -translate-x-1/2 z-1000 bg-surface p-4 rounded-2xl">
           <button
             className={`absolute top-1 right-1`}
             onClick={() => {
-              setMode("all");
-              setSelectedCountry(undefined);
-              setRandomCountry(undefined);
+              setAppState({ mode: "all" });
             }}
           >
             <Close />
           </button>
-          {selectedCountry === randomCountry ? (
+          {appState.selectedCountry === appState.randomCountry ? (
             <div className="relative">Congratulations!</div>
           ) : (
             <div>
               <div>
-                You picked <b className="font-semibold">{selectedCountry.countryName}</b> instead of{" "}
-                <b className="font-semibold">{randomCountry?.countryName}</b>
+                You picked <b className="font-semibold">{appState.selectedCountry.countryName}</b> instead of{" "}
+                <b className="font-semibold">{appState.randomCountry.countryName}</b>
               </div>
               <div className="flex justify-center pt-4">
                 <Button
-                  onClick={() => {
-                    setSelectedCountry(randomCountry);
-                    setMode("all");
-                  }}
+                  onClick={() =>
+                    setAppState({
+                      mode: "all",
+                      selectedCountry: appState.randomCountry,
+                    })
+                  }
                 >
-                  Show me {randomCountry?.countryName}
+                  Show me {appState.randomCountry.countryName}
                 </Button>
               </div>
             </div>
@@ -81,17 +96,28 @@ export default function Home() {
       ) : null}
 
       {/*Search bar*/}
-      {mode === "all" && <Search countries={countries.data} countrySelected={setSelectedCountry} />}
-      {/*Start country search*/}
-      {mode !== "random" && (
-        <Random
-          onClick={() => {
-            setMode("random");
-            if (!countries.data) return;
-            setRandomCountry(countries.data[Math.floor(Math.random() * countries.data.length)]);
+      {appState.mode === "all" && (
+        <Search
+          countries={countries.data}
+          countrySelected={country => {
+            setAppState({ mode: "all", selectedCountry: country });
           }}
         />
       )}
+
+      {/*Start country search*/}
+      {appState.mode !== "random" && (
+        <Random
+          onClick={() => {
+            if (!countries.data) return;
+            setAppState({
+              mode: "random",
+              randomCountry: countries.data[Math.floor(Math.random() * countries.data.length)],
+            });
+          }}
+        />
+      )}
+
       {/*Toggle which disables country outlines*/}
       <div className="absolute rounded-2xl bg-surface p-2 bottom-2 left-2 z-1000">
         <label className="flex items-center cursor-pointer select-none">
@@ -107,16 +133,18 @@ export default function Home() {
           <span className="ml-2 text-sm">Outline</span>
         </label>
       </div>
+
       {/*Map*/}
       <WorldMap
-        country={mode === "random" ? undefined : selectedCountry}
+        country={appState.mode === "random" ? undefined : appState?.selectedCountry}
         showOutline={showOutline}
         countries={countries.data}
         countryClicked={country => {
-          if (mode === "random") {
-            setMode("result");
+          if (appState.mode === "random") {
+            setAppState({ mode: "result", selectedCountry: country, randomCountry: appState.randomCountry });
+          } else {
+            setAppState({ mode: "all", selectedCountry: country });
           }
-          setSelectedCountry(country);
         }}
       />
     </>

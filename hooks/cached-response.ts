@@ -32,7 +32,7 @@ const getResponse = async (db: IDBDatabase, url: string) =>
     request.onerror = () => reject(request.error);
   });
 
-export const useCachedResponse = <T extends object>(url: string) => {
+export const useCachedResponse = <T extends object>(url: string, useCache = false) => {
   const [response, setResponse] = useState<{ loading: true; data: undefined } | { loading: false; data: T }>({
     data: undefined,
     loading: true,
@@ -40,17 +40,25 @@ export const useCachedResponse = <T extends object>(url: string) => {
 
   useEffect(() => {
     (async () => {
-      const db = await getDatabase("cached-responses");
-      const response = (await getResponse(db, url)) as T;
-      if (response) {
-        setResponse({ data: response, loading: false });
-      } else {
-        const response = await fetch(url).then(r => r.json());
-        await saveResponse(db, url, response);
-        setResponse({ data: response, loading: false });
+      if (useCache) {
+        const db = await getDatabase("cached-responses");
+        const cachedResponse = await getResponse(db, url);
+        if (cachedResponse) {
+          setResponse({ loading: false, data: cachedResponse as T });
+          return;
+        }
+      }
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setResponse({ loading: false, data });
+
+      if (useCache) {
+        const db = await getDatabase("cached-responses");
+        await saveResponse(db, url, data);
       }
     })();
-  }, [url]);
+  }, [url, useCache]);
 
   return response;
 };

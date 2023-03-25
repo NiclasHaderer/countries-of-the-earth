@@ -1,20 +1,20 @@
 import { GeoJSON } from "./geojson";
 import { Capitals } from "./capital";
 import * as fs from "fs";
+import simplify from "simplify-js";
 
 const borders: GeoJSON = await fetch(
   "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
 ).then(r => r.json());
 
 const cleanedBorders = borders.features.map(f => {
-  let border = f.geometry.coordinates.map(c => c.map(c => c.map(c => [c[1], c[0]])));
+  let border = f.geometry.coordinates.map(c => c.map(c => c.map(c => [c[1], c[0]]))) as [number, number][][][];
   // Remove 3/4 of the datapoints, except if there are less than 50 datapoints
   border = border.map(borders => {
     return borders.map((borders, _) => {
-      if (borders.length < 50) {
-        return borders;
-      }
-      return borders.filter((_, i) => i % 10 === 0 || i === borders.length - 1);
+      const mapped = borders.map(positions => ({ x: positions[0], y: positions[1] }));
+      const simplified = simplify(mapped, 0.05, true);
+      return simplified.map(positions => [positions.x, positions.y]);
     });
   });
 
