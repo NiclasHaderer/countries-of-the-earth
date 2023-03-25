@@ -1,7 +1,0 @@
-build
-coverage
-.next
-.idea
-node_modules
-public
-public/countries.json
