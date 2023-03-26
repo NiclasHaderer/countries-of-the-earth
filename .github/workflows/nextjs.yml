@@ -74,7 +74,7 @@ jobs:
       - name: Install Data dependencies
         run: cd generate-data && ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Generate data
-        run: cd generate-data && ${{ steps.detect-package-manager.outputs.runner }} run run
+        run: cd generate-data && ${{ steps.detect-package-manager.outputs.manager }} run run
       - name: Install Next dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
