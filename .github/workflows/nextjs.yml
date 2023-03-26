@@ -72,7 +72,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install Data dependencies
-        run: cd generate-data && ${{ steps.detect-package-manager.outputs.runner }} next build
+        run: cd generate-data && ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Generate data
         run: cd generate-data && ${{ steps.detect-package-manager.outputs.runner }} run run
       - name: Install Next dependencies
