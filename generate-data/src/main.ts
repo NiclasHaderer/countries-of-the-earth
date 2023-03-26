@@ -2,6 +2,8 @@ import { GeoJSON } from "./geojson";
 import { Capitals } from "./capital";
 import * as fs from "fs";
 import simplify from "simplify-js";
+import {fileURLToPath} from "url";
+import path from "path";
 
 const borders: GeoJSON = await fetch(
   "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
@@ -69,5 +71,8 @@ const countries: (
     ...capital,
   };
 });
-
-fs.writeFileSync("../../public/countries.json", JSON.stringify(countries));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootPath = path.resolve(__dirname, "../..");
+const jsonPath = `${rootPath}/public/countries.json`;
+fs.writeFileSync(jsonPath, JSON.stringify(countries));
