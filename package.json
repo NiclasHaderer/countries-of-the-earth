@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build-static": "next build && next export && node replace-absolute-path.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "flag-icons": "^6.6.6",

@@ -10,6 +10,7 @@ import { useLocalStorage } from "@/hooks/localstorage";
 import { Clear } from "@/components/clear";
 import { Generate } from "@/components/generate";
 import { Ripple } from "@/components/ripple/ripple";
+import favIcon from "@/public/favicon.ico";
 
 const WorldMap = dynamic(
   import("../components/world-map").then(i => ({ default: i.WorldMap })),
@@ -54,7 +55,7 @@ export default function Home() {
         <title>Countries of the earth</title>
         <meta name="description" content="Improve your geographic knowledge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href={favIcon.src} />
       </Head>
       {/*Indicator which country to pick*/}
       {appState.mode === "random" ? (
