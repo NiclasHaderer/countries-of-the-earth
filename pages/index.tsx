@@ -98,7 +98,7 @@ export default function Home() {
                   })
                 }
               >
-                Show me {appState.randomCountry.countryName}
+                Help
               </Help>
             </div>
           )}
