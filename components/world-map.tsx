@@ -1,4 +1,4 @@
-import { MapContainer, Marker, Polygon, Popup, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, Marker, Polygon, Popup, TileLayer, useMap, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { FC, useEffect, useRef } from "react";
 import { Countries, Country } from "@/pages/types";
@@ -11,7 +11,8 @@ export const WorldMap: FC<{
   countries?: Countries;
   countryClicked?: (country: Country) => void;
   showOutline?: boolean;
-}> = ({ country, countries, countryClicked, showOutline = false }) => {
+  center?: boolean;
+}> = ({ country, countries, center, countryClicked, showOutline = false }) => {
   return (
     <MapContainer
       center={[0, 0]}
@@ -34,19 +35,25 @@ export const WorldMap: FC<{
           fill={false}
         />
       ))}
-      <ZoomControl position={"bottomright"} />
+      {center && <Center country={country} />}
+      <ZoomControl position={"topright"} />
     </MapContainer>
   );
 };
 
-const CountryDisplay: FC<{ country: Country }> = ({ country }) => {
-  // const map = useMap();
-  // Center to bbox
-  // const corner1 = latLng(...country.bbox[0]);
-  // const corner2 = latLng(...country.bbox[1]);
-  // const bounds = latLngBounds(corner1, corner2);
-  // map.fitBounds(bounds);
+const Center: FC<{ country?: Country }> = ({ country }) => {
+  const map = useMap();
 
+  useEffect(() => {
+    if (!country) return;
+
+    map.panTo(country.center);
+  });
+
+  return <></>;
+};
+
+const CountryDisplay: FC<{ country: Country }> = ({ country }) => {
   // Show the popup
   const markerRef = useRef<LeafletMarker>(null);
   useEffect(() => void markerRef.current?.openPopup());
@@ -64,18 +71,22 @@ const CountryDisplay: FC<{ country: Country }> = ({ country }) => {
             : [country.center.lat, country.center.lng]
         }
         icon={divIcon({
-          html: renderToString(<MapPin className="stroke-red-600 !w-8 !h-8" />),
+          html: renderToString(<MapPin className="stroke-red-600 z-1000 !w-[40px] !h-[40px]" />),
+          iconSize: [40, 40],
+          iconAnchor: [20, 40],
         })}
       >
-        <Popup autoClose={false} autoPan={false} autoPanPadding={[0, 0]}>
-          <div className="flex justify-center pb-1">
-            <span className={`fi fi-${country.countryISO} mr-1`}></span>
+        <Popup className="!text-medium text-base" autoClose={false} autoPan={false} autoPanPadding={[0, 0]}>
+          <div className="flex justify-center">
+            <span
+              className={`fi fi-${country.countryISO} border-black border-1 box-content border-1 mb-2 scale-150`}
+            ></span>
           </div>
           <div className="flex">
             <b className="pr-0.5">Country: </b>
             {country.countryName}
           </div>
-          <div className="flex">
+          <div className="flex pb-4">
             <b className="pr-0.5">Capital: </b>
             {country.capitalName}
           </div>
@@ -134,7 +145,7 @@ const CustomPolygon: FC<{
       color="blue"
       weight={visible ? 1 : 0}
       fillColor="red"
-      fillOpacity={fill ? 0.1 : 0}
+      fillOpacity={fill ? 0.3 : 0}
       fill={true}
       fillRule={"evenodd"}
     />

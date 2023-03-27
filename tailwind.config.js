@@ -14,6 +14,9 @@ module.exports = {
         surface: "#fff",
         text: "#000",
       },
+      borderWidth: {
+        1: "1px",
+      },
     },
     zIndex: [0, 10, 100, 1000].reduce((acc, curr) => {
       acc[curr] = curr;

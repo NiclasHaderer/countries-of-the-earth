@@ -2,7 +2,7 @@ import { GeoJSON } from "./geojson";
 import { Capitals } from "./capital";
 import * as fs from "fs";
 import simplify from "simplify-js";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 import path from "path";
 
 const borders: GeoJSON = await fetch(

@@ -18,7 +18,7 @@ export const Search: FC<{
   return (
     <>
       <div
-        className="absolute top-2 left-1/2 -translate-x-1/2 z-1000"
+        className="absolute top-2 left-1/2 -translate-x-1/2 z-1000 pointer-events-none w-full flex justify-center"
         ref={inputWrapperRef}
         onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
           if (event.key === "ArrowUp") {
@@ -30,33 +30,35 @@ export const Search: FC<{
           }
         }}
       >
-        <input
-          onChange={e => {
-            const currentSearch = e.target.value;
-            if (!countries || !currentSearch) {
-              setAutocomplete([]);
-              return;
-            }
-            const results = getResults(currentSearch, countries);
-            setAutocomplete(results);
-          }}
-          className="box-border rounded-xl w-full outline-none p-2"
-          placeholder="Country or Capital"
-        />
-        <div className="rounded-xl mt-2 bg-surface flex flex-col overflow-hidden">
-          {autocomplete.map((country, index) => (
-            <button
-              className="text-left border-b-slate-300 outline-none focus:bg-slate-200 hover:bg-slate-200 border-b-2 last:border-none p-1"
-              key={index}
-              onClick={() => {
-                countrySelected?.(country);
+        <div className="w-3/4 lg:w-1/2 xl:w-2/5 2xl:w-1/4 pointer-events-auto">
+          <input
+            onChange={e => {
+              const currentSearch = e.target.value;
+              if (!countries || !currentSearch) {
                 setAutocomplete([]);
-              }}
-            >
-              <span className={`fi fi-${country.countryISO} mr-1`}></span>
-              {country.countryName}
-            </button>
-          ))}
+                return;
+              }
+              const results = getResults(currentSearch, countries);
+              setAutocomplete(results);
+            }}
+            className="box-border rounded-xl w-full outline-none p-2 hover:bg-gray-100 transition-colors duration-300"
+            placeholder="Country or Capital"
+          />
+          <div className="rounded-xl mt-2 bg-surface flex flex-col overflow-hidden">
+            {autocomplete.map((country, index) => (
+              <button
+                className="text-left border-b-gray-300 outline-none focus:bg-gray-200 hover:bg-gray-200 border-b-2 last:border-none p-1 overflow-hidden text-ellipsis whitespace-nowrap"
+                key={index}
+                onClick={() => {
+                  countrySelected?.(country);
+                  setAutocomplete([]);
+                }}
+              >
+                <span className={`fi fi-${country.countryISO} mr-1`}></span>
+                {country.countryName}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </>

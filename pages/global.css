@@ -21,6 +21,10 @@ body {
   box-shadow: none !important;
 }
 
+.leaflet-marker-pane {
+  z-index: 1000 !important;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }

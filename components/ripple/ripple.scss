@@ -1,0 +1,38 @@
+.ripple-wrapper {
+  position: relative;
+
+  .ripple-container {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    .ripple-span {
+      transform: scale(0);
+      opacity: 1;
+      border-radius: 100%;
+      position: absolute;
+      animation-timing-function: cubic-bezier(0, 0.81, 0.27, 1.05);
+      animation: ripple;
+    }
+
+    .default-ripple-color {
+      background-color: rgba(255, 255, 255, 0.75);
+    }
+  }
+}
+
+@keyframes ripple {
+  80% {
+    transform: scale(2);
+    opacity: 0.5;
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
